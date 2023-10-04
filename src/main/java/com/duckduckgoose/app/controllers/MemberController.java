@@ -34,6 +34,7 @@ public class MemberController {
         this.honkService = honkService;
     }
 
+
     @RequestMapping(value = "/members", method = RequestMethod.GET)
     public ModelAndView getMembersPage(
             @RequestParam(value = "search", required = false) String search,
@@ -58,6 +59,7 @@ public class MemberController {
         return new ModelAndView("members", "model", membersViewModel);
     }
 
+
     @RequestMapping(value = "/member/{username}", method = RequestMethod.GET)
     public ModelAndView getMemberPage(
             @PathVariable String username,
@@ -67,6 +69,7 @@ public class MemberController {
         Member member = memberService.getMemberByUsername(username);
         Pageable pageRequest = PaginationHelper.getPageRequest(page);
         Page<Honk> honks = honkService.getMemberHonks(member, search, pageRequest);
+
 
         MemberViewModel memberViewModel = new MemberViewModel(member, honks, search);
         return new ModelAndView("member", "model", memberViewModel);
@@ -87,4 +90,28 @@ public class MemberController {
         memberService.removeFollower(followerMember, followedMember);
         return new ModelAndView("redirect:/member/" + username);
     }
+
+        if (member != null) {
+            MemberViewModel memberViewModel = new MemberViewModel(member, honks, search);
+            return new ModelAndView("member", "model", memberViewModel);
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+    }
+    @RequestMapping(value = "/members", method = RequestMethod.GET)
+    public ModelAndView getMembersPage(
+            @RequestParam(value = "search", required = false) String search,
+            @RequestParam(value = "filter", required = false) String filter,
+            @RequestParam (value = "page", required = false) Integer page
+    ) {
+        Page<Member> members;
+        Pageable pageRequest = PaginationHelper.getPageRequest(page);
+        members = memberService.getMembers(search, pageRequest);
+
+
+        MembersViewModel membersViewModel = new MembersViewModel(members, search, filter);
+        return new ModelAndView("members", "model", membersViewModel);
+    }
+
+
 }
