@@ -44,9 +44,12 @@ public class MemberController {
         Member member = memberService.getMemberByUsername(username);
         Pageable pageRequest = PaginationHelper.getPageRequest(page);
         Page<Honk> honks = honkService.getMemberHonks(member, search, pageRequest);
-
-        MemberViewModel memberViewModel = new MemberViewModel(member, honks, search);
-        return new ModelAndView("member", "model", memberViewModel);
+        if (member != null) {
+            MemberViewModel memberViewModel = new MemberViewModel(member, honks, search);
+            return new ModelAndView("member", "model", memberViewModel);
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
     }
     @RequestMapping(value = "/members", method = RequestMethod.GET)
     public ModelAndView getMembersPage(
