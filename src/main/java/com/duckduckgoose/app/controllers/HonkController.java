@@ -48,7 +48,7 @@ public class HonkController {
         honkService.createHonk(author, honkRequest);
         redirectAttributes.addFlashAttribute("flashMessage", "Honk posted successfully.");
         return new ModelAndView("redirect:/honks");
-
+    }
     @RequestMapping(value = "/honks", method = RequestMethod.GET)
     public ModelAndView getHonksPage(
             @RequestParam (value = "search", required = false) String search,
